@@ -1,4 +1,4 @@
-class Vector2
+class Vector2D
 {
     constructor(x, y)
     {
@@ -16,34 +16,40 @@ function setup()
 
 function draw()
 {
-    for(let w = 0; w <= 10; w++)
-    {
-        let nMap = [];
-        for(let h = 0; h <= 10; h++)
-        {
-            
-        }
-    }
-    console.log(noiseGrid());
+    permutationsTabel()
 }
 
-function noiseGrid()
+function permutationsTabel()
 {
-    const nMap = [];
-    for(let x = 0; x <= 10; x++)
+    // Lav en tabel fra 0-255
+    const P = [];
+    for(let i = 0; i<256; i++)
     {
-        nMap[x] = [];
-        for(let y = 0; y <= 10; y++)
-        {
-            const angle = random(2*Math.PI);
-
-            const nytGrid = {
-                x: Math.cos(angle),
-                y: Math.sin(angle)
-            };
-            nMap[x][y] = nytGrid; 
-        }
-        
+        P[i]=i;
     }
-    return nMap;
+    // Bland tabellen tilfældigt
+    shuffle(P, true);
+    return P;
+}
+P = permutationsTabel()
+function noise2D()
+{
+    // Vi bruger bitwise AND til at sikre at vores værdi ikke overstiger
+    // 256, da det indeks ikke eksisterer i vores permutationsTabel
+    const X = Math.floor(x) & 255;
+    const Y = Math.floor(y) & 255;
+
+    const xf = x-Math.floor(x);
+    const yf = y-Math.floor(y);
+
+    // Lav 4 vektorer i hvert hjørne der rammer samme sted
+    const topHøjre = new Vector2D(xf-1.0,yf-1.0);
+    const topVenstre = new Vector2D(xf,yf-1.0);
+    const bundHøjre = new Vector2D(xf-1.0,yf);
+    const bundVenstre = new Vector2D(xf,yf);
+
+    const værdiTopHøjre = P[P[X+1]+Y+1]
+    const værdiTopVenstre = P[P[X]+Y+1]
+    const værdiBundHøjre = P[P[X+1]+Y]
+    const værdiBundVenstre = P[P[X]+Y]
 }
