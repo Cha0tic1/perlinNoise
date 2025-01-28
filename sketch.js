@@ -1,3 +1,5 @@
+new p5();
+
 class Vector2D
 {
     constructor(x, y)
@@ -5,8 +7,11 @@ class Vector2D
         this.x = x;
         this.y = y;
     }
-    
 
+    dot(konstantVektor)
+    {
+        return this.x*konstantVektor.x + this.y*konstantVektor.y;
+    }
 }
 
 function setup() 
@@ -16,22 +21,45 @@ function setup()
 
 function draw()
 {
-    permutationsTabel()
+    
 }
 
 function permutationsTabel()
 {
     // Lav en tabel fra 0-255
-    const P = [];
+    let P = [];
     for(let i = 0; i<256; i++)
     {
         P[i]=i;
     }
     // Bland tabellen tilfældigt
-    shuffle(P, true);
-    return P;
+    return shuffle(P); 
 }
-P = permutationsTabel()
+let P = permutationsTabel()
+
+function lavVektor(ptable)
+{
+    //Tildel vores k variable et tal mellem 0 og 3, v.ha bitwise AND
+    let k = ptable & 3
+    //Lav en vektor i en tilfældig retning afhængigt af k
+    if(k == 0)
+    {
+        return new Vector2D(1.0,1.0);
+    }
+    else if(k == 1)
+    {
+        return new Vector2D(-1.0,1.0);
+    }
+    else if(k == 2)
+    {
+        return new Vector2D(1.0,-1.0);
+    }
+    else
+    {
+        return new Vector2D(-1.0,-1.0);
+    }
+}
+
 function noise2D()
 {
     // Vi bruger bitwise AND til at sikre at vores værdi ikke overstiger
@@ -48,8 +76,15 @@ function noise2D()
     const bundHøjre = new Vector2D(xf-1.0,yf);
     const bundVenstre = new Vector2D(xf,yf);
 
+    // Find en værdi for hvert hjørne, afhængigt af vores permutationsTabel
     const værdiTopHøjre = P[P[X+1]+Y+1]
     const værdiTopVenstre = P[P[X]+Y+1]
     const værdiBundHøjre = P[P[X+1]+Y]
     const værdiBundVenstre = P[P[X]+Y]
+
+    // Tag dot produktet af vores konstante vektorer og vores tilfældige.
+    const dotTopHøjre = topHøjre.dot(lavVektor(værdiTopHøjre));
+    const dotTopVenstre = topVenstre.dot(lavVektor(værdiTopVenstre));
+    const dotBundHøjre = bundHøjre.dot(lavVektor(værdiBundHøjre));
+    const dotBundVenstre = bundVenstre.dot(lavVektor(værdiBundVenstre));
 }
