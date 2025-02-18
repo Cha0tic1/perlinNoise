@@ -17,7 +17,7 @@ class Vector2D
 
 function setup() 
 {
-	createCanvas(100, 100);
+	createCanvas(100,100);
     loadPixels();
     let d = pixelDensity();
     let w = d * width;
@@ -27,14 +27,18 @@ function setup()
     {
         for(let y = 0; y<h; y++)
         {
-            let index = 4*(x+y*w);
-            //let n = noise2D(x,y);
-            //let brightness = map(n,-1,1,0,255)
+            let index = 4*(x+y*w)
+            let n = noise2D(x*0.05,y*0.05);
+            n+=1.0;
+            n*=0.5;
 
-            pixels[index]=0;
-            pixels[index+1]=0;
-            pixels[index+2]=0;
-            pixels[index+3]=0;
+            let rgb = Math.round(255*n);
+            
+
+            pixels[index]=rgb;
+            pixels[index+1]=rgb;
+            pixels[index+2]=rgb;
+            pixels[index+3]=255;
         }
     }
        
@@ -82,6 +86,7 @@ function lavVektor(ptable)
 }
 
 // En funktion til at interpolere to værdier med hinanden.
+// Interpolere er at finde en værdi mellem to værdier
 function interpol(t,v1,v2)
 {
     return v1+t*(v2-v1);
