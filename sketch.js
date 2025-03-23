@@ -22,7 +22,8 @@ function setup()
     let d = pixelDensity();
     let w = d * width;
     let h = d * height;
-    let skala = 0.0005;
+    //Juster skalaen på noisen
+    let skala = 0.005;
 
     for(let x = 0; x<w; x++)
     {
@@ -31,19 +32,25 @@ function setup()
             let index = 4*(x+y*width);
             let frek = skala;
             let n = 0.0;
+            //juster amplituden af vores noise
             let amp = 1.0;
+            //Lav flere lag af noise oven i hinanden, med forskellige værdier, for at få
+            //flere detaljer på
             for (let oct = 0; oct < 8; oct++)
             {
                 let v = amp*noise2D(x*frek,y*frek)
                 n += v;
+                //Lav amplituden og frekvensen større, for at gøre vores noise forskellig
                 amp *= 0.5;
-                frek *=2.0;
+                frek *= 2.0;
             }
-
+            //Noise funktionen returnerer en værdi mellem -1 og 1, her omskriver vi så den
+            //returner en værdi mellem 0 og 1
             n+=1.0;
             n*=0.5;
-
+            //Tildel en RGB værdi alt efter noisen
             let rgb = Math.round(255*n);
+            //farver den blå
             if(n < 0.5)
             {
             pixels[index]=0;
@@ -51,6 +58,7 @@ function setup()
             pixels[index+2]=rgb*2;
             pixels[index+3]=255;
             }
+            //farver den grøn
             else if(n < 0.9)
             {
             pixels[index]=0;
@@ -58,6 +66,7 @@ function setup()
             pixels[index+2]=rgb*0.5;
             pixels[index+3]=255;
             }
+            //farver den sort/hvid
             else
             {
             pixels[index]=rgb;
@@ -93,15 +102,15 @@ function lavVektor(ptable)
     //Tildel vores k variable et tal mellem 0 og 3
     let k = ptable % 4
     //Lav en vektor i en tilfældig retning afhængigt af k
-    if(k == 0)
+    if(k === 0)
     {
         return new Vector2D(1.0,1.0);
     }
-    else if(k == 1)
+    else if(k === 1)
     {
         return new Vector2D(-1.0,1.0);
     }
-    else if(k == 2)
+    else if(k === 2)
     {
         return new Vector2D(1.0,-1.0);
     }
