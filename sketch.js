@@ -22,23 +22,49 @@ function setup()
     let d = pixelDensity();
     let w = d * width;
     let h = d * height;
+    let skala = 0.0005;
 
     for(let x = 0; x<w; x++)
     {
         for(let y = 0; y<h; y++)
         {
-            let index = 4*(x+y*w)
-            let n = noise2D(x*0.05,y*0.05);
+            let index = 4*(x+y*width);
+            let frek = skala;
+            let n = 0.0;
+            let amp = 1.0;
+            for (let oct = 0; oct < 8; oct++)
+            {
+                let v = amp*noise2D(x*frek,y*frek)
+                n += v;
+                amp *= 0.5;
+                frek *=2.0;
+            }
+
             n+=1.0;
             n*=0.5;
 
             let rgb = Math.round(255*n);
-            
-
+            if(n < 0.5)
+            {
+            pixels[index]=0;
+            pixels[index+1]=0;
+            pixels[index+2]=rgb*2;
+            pixels[index+3]=255;
+            }
+            else if(n < 0.9)
+            {
+            pixels[index]=0;
+            pixels[index+1]=rgb;
+            pixels[index+2]=rgb*0.5;
+            pixels[index+3]=255;
+            }
+            else
+            {
             pixels[index]=rgb;
             pixels[index+1]=rgb;
             pixels[index+2]=rgb;
             pixels[index+3]=255;
+            }
         }
     }
        
@@ -64,8 +90,8 @@ let pTabel = permutationsTabel()
 
 function lavVektor(ptable)
 {
-    //Tildel vores k variable et tal mellem 0 og 3, v.ha bitwise AND
-    let k = ptable & 3
+    //Tildel vores k variable et tal mellem 0 og 3
+    let k = ptable % 4
     //Lav en vektor i en tilfældig retning afhængigt af k
     if(k == 0)
     {
@@ -86,7 +112,7 @@ function lavVektor(ptable)
 }
 
 // En funktion til at interpolere to værdier med hinanden.
-// Interpolere er at finde en værdi mellem to værdier
+// Interpolere er at finde en middelværdi mellem to værdier
 function interpol(t,v1,v2)
 {
     return v1+t*(v2-v1);
